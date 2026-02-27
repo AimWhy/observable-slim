@@ -1,6 +1,6 @@
 /*
  * 	Observable Slim
- *	Version 0.2.1
+ *	Version 0.2.2
  * 	https://github.com/elliotnb/observable-slim
  *
  * 	Licensed under the MIT license:
@@ -212,38 +212,6 @@ const ObservableSlim = (function() {
 		if (graphContains(root, oldObj)) return;
 		cleanupOrphan(observable, oldObj);
 	}
-
-	/**
-	 * Returns a string of the nested path (in relation to the top-level observed object) of the property being modified or deleted.
-	 * @param {} target Plain object that we want to observe for changes.
-	 * @param {string|symbol} property Property name (or internal symbol used for introspection).
-	 * @param {} [jsonPointer] Set to `true` if the string path should be formatted as a JSON pointer rather than with the dot notation
-	 * (`false` as default).
-	 * @returns {} Nested path (e.g., `hello.testing.1.bar` or, if JSON pointer, `/hello/testing/1/bar`).
-	 */
-	const _getPath = function(target, property, jsonPointer) {
-		let fullPath = "";
-		let currTarget = target;
-		let currProperty = property;
-		
-		// We will traverse up the parent chain to build the path
-		const parts = [];
-		while (currTarget) {
-			const segment = (typeof currProperty === "symbol" && currProperty === S_PARENT) ? "__S_PARENT__" : String(currProperty);
-			const rec = targetToProxies.get(currTarget);
-			parts.push(segment);
-			break; 
-		}
-		return fullPath;
-	};
-
-	const _getProperty = function(obj, path) {
-		// If the path is empty/nullish, the "property at path" is the object itself.
-		if (path == null || path === "") return obj;
-		return path.split('.').reduce(function(prev, curr) {
-			return prev ? prev[curr] : undefined;
-		}, obj);
-	};
 
 	/**
 	 * Create a new ES6 `Proxy` whose changes we can observe through the `observe()` method.
